@@ -1,0 +1,9 @@
+{
+  "extends": "airbnb-base",
+  // Dislike a rule? check the rationale before disabling:
+  // https://github.com/airbnb/javascript
+  "rules": {
+    "no-console": 0,
+    "no-underscore-dangle": 0
+  }
+}

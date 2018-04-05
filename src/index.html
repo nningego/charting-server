@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Charting Server Demo</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+  <body>
+    <h1>Updating Graph...</h1>
+  <script>
+  const width = 600;
+  const height = 600;
+
+  let svg = d3.select(document.body).append('svg').attr('width', width).attr('height', height);
+
+  setInterval(() =>
+    d3.json("/data.json", (array) => {
+      svg.remove();
+      svg = d3.select(document.body).append('svg').attr('width', width).attr('height', height);
+
+      const data = d3.stratify()(array);
+      const color = d3.scaleOrdinal(d3.schemeCategory20);
+
+      // Declare d3 layout
+      const treemap = d3.treemap().tile(d3.treemapBinary).size([width, height]).paddingOuter(5);
+
+      // Layout + Data
+      const root = d3.hierarchy(data).sum(function(d) {
+        return d.data.size;
+      });
+      treemap(root);
+      const cell =
+        svg.selectAll('g').data(root.leaves()).enter()
+          .append('g')
+          .attr("transform", function(d) {
+            return "translate(" + d.x0 + "," + d.y0 + ")";
+          });
+
+      cell
+        .append("rect")
+        .attr('width', function(d) {
+          return d.x1 - d.x0;
+        })
+        .attr('height', function(d) {
+          return d.y1 - d.y0;
+        })
+        .attr('fill', function(d) {
+          return color(d.data.id);
+        });
+
+      cell.append("text")
+        .attr("font-size", "24px")
+        .selectAll("tspan")
+        .data(function(d) {
+          return d.data.id.split(/(?=[A-Z][^A-Z])/g);
+        })
+        .enter().append("tspan")
+        .attr("x", 4)
+        .attr("y", function(d, i) {
+          return 22 + i * 10;
+        })
+        .text(function(d) {
+          return d;
+        });
+    }), 1000);
+
+
+</script>
+  </body>
+
+</html>
