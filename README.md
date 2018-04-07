@@ -2,6 +2,8 @@
     
     NodeJS, Express server hosted D3 charting
 
+![Alt text](charing-server.gif "Chart")
+
 ## Example chart on: 
     http://localhost:3000/charts
     
